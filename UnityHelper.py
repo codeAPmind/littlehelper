@@ -124,7 +124,7 @@ class RestReminderWin(tk.Tk):
         self.open_crash_log = tk.Button(self, text="Editor log", command=self.open_crashlog)
         self.open_crash_log.grid(row=4, column=0,sticky='nsew',pady=(10, 0)) 
         self.open_crash_log.config(font=(self.settings.text_font, int(self.settings.text_size)))
-
+        self.arrow()
         if isinstance(self.result,tuple) and not all(self.result):
             self.update_button.config(state="disabled")
             messagebox.showwarning("License Error", f"{', '.join(j for i,j in zip(self.result,('软件过期','硬件错误','程序错误','授权错误')) if not i)}, 联系微信号w809500586购买")
@@ -224,7 +224,7 @@ class RestReminderWin(tk.Tk):
             #     t1.start()
             # except:
             #     pass
-            # self.arrow()
+            self.arrow()
 
 
     def play_sound(self):
@@ -247,18 +247,8 @@ class RestReminderWin(tk.Tk):
             return False
     
     def arrow(self):
-        f=path(self.settings.arrow_up if self.isWork else self.settings.arrow_down)
+        f=path(self.settings.arrow_up if True else self.settings.arrow_down)
         self.iconphoto(False,tk.PhotoImage(file=f)) if f else None
-
-    def set_work_msg(self):
-        self.update_button.config(text="工作进行中")
-        current_time = datetime.datetime.now()
-        print("self.settings.workminutes",self.settings.workminutes) if DEBUG else None
-        time_after_random_seconds = current_time + datetime.timedelta(seconds=0.1*60)
-        formatted_current_time = current_time.strftime("%H:%M:%S")
-        formatted_time = time_after_random_seconds.strftime("%H:%M:%S") #%Y-%m-%d %H:%M:%S
-        self.timeUpdate.delete('1.0', tk.END)  # Clear the current content
-        self.timeUpdate.insert('1.0', f'开始工作时间: {formatted_current_time}  结束工作时间: {formatted_time}\n休息{self.settings.restminutes}分钟')  # Set the new content
 
     def on_closing(self):
         if any(i!=j for i,j in zip(values(self.settings),self.settings0)):
@@ -268,9 +258,7 @@ class RestReminderWin(tk.Tk):
 
     def contiue_work(self):
         self.cancel_work()
-        # self.check_Time()
         self.work_button(0.1*60)
-        # self.set_work_msg()
         self.isWork = True
         self.arrow()
 
