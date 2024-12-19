@@ -13,6 +13,9 @@ from name import datfile,name,path
 from keygen import query,permit,trial,key,sample,load,dump1,nt,dc,values
 import setting
 
+import os
+import glob
+
 DEBUG =  False
 
 
@@ -49,7 +52,8 @@ class RestReminderWin(tk.Tk):
         for k,v in zip(self.key._fields,self.key):setattr(self,k,v)
         self.ver=f'{self.version}'
         self.endTimeStr2=datetime.datetime.strptime(self.endTimeStr,'%a %b %d %H:%M:%S %Y').strftime("%Y-%m-%d %H:%M:%S")
-        self.title(f"{name()} {self.version} {self.edition} {int((self.time-time.time())/86400)} days. © {time.strftime('%Y')} 图正的小店")
+        # self.title(f"{name()} {self.version} {self.edition} {int((self.time-time.time())/86400)} days. © {time.strftime('%Y')} 图正的小店")
+        self.title(f"Unity小帮帮")
 
     def load_settings(self,f):
         self.settingsfile=path(f)
@@ -82,28 +86,85 @@ class RestReminderWin(tk.Tk):
 
         self.grid_rowconfigure(0, weight=1)
         self.grid_rowconfigure(1, weight=1)
+        self.grid_rowconfigure(2, weight=1)
+        self.grid_rowconfigure(3, weight=1)
+        self.grid_rowconfigure(4, weight=1)
         self.grid_columnconfigure(0, weight=1)
 
         context_menu = tk.Menu(self, tearoff=0)
         context_menu.add_command(label="设置", command=self.show_set_window)
-        context_menu.add_command(label="购买", command=lambda:webbrowser.open("https://item.taobao.com/item.htm?id=753192371704"))
+        # context_menu.add_command(label="购买", command=lambda:webbrowser.open("https://item.taobao.com/item.htm?id=753192371704"))
         self.bind("<Button-3>", lambda event: context_menu.post(event.x_root, event.y_root))
 
         current_time = datetime.datetime.now()
         current_time_string = current_time.strftime("%Y-%m-%d %H:%M:%S")
         
-        self.timeUpdate = tk.Text(self, width=20, height=2) 
+        # self.timeUpdate = tk.Text(self, width=20, height=2) 
 
-        self.timeUpdate.grid(row=1, column=0,sticky='nsew',pady=(10, 0)) 
-        self.timeUpdate.config(font=(self.settings.text_font, int(self.settings.text_size)))
+        # self.timeUpdate.grid(row=1, column=0,sticky='nsew',pady=(10, 0)) 
+        # self.timeUpdate.config(font=(self.settings.text_font, int(self.settings.text_size)))
 
-        self.update_button = tk.Button(self, text="开始工作", command=self.start_work)
+        self.update_button = tk.Button(self, text="Restart Unity", command=self.Restart)
         self.update_button.grid(row=0, column=0,sticky='nsew',pady=(10, 0)) 
         self.update_button.config(font=(self.settings.text_font, int(self.settings.text_size)))
+
+        self.kil_button = tk.Button(self, text="Kill Unity", command=self.kill_unity)
+        self.kil_button.grid(row=1, column=0,sticky='nsew',pady=(10, 0)) 
+        self.kil_button.config(font=(self.settings.text_font, int(self.settings.text_size)))
+
+        self.open_client_log = tk.Button(self, text="APP log", command=self.open_applog)
+        self.open_client_log.grid(row=2, column=0,sticky='nsew',pady=(10, 0)) 
+        self.open_client_log.config(font=(self.settings.text_font, int(self.settings.text_size)))
+
+
+        self.open_sdk_log = tk.Button(self, text="Sdk log", command=self.open_sdklog)
+        self.open_sdk_log.grid(row=3, column=0,sticky='nsew',pady=(10, 0)) 
+        self.open_sdk_log.config(font=(self.settings.text_font, int(self.settings.text_size)))
+
+        self.open_crash_log = tk.Button(self, text="Editor log", command=self.open_crashlog)
+        self.open_crash_log.grid(row=4, column=0,sticky='nsew',pady=(10, 0)) 
+        self.open_crash_log.config(font=(self.settings.text_font, int(self.settings.text_size)))
+
         if isinstance(self.result,tuple) and not all(self.result):
             self.update_button.config(state="disabled")
             messagebox.showwarning("License Error", f"{', '.join(j for i,j in zip(self.result,('软件过期','硬件错误','程序错误','授权错误')) if not i)}, 联系微信号w809500586购买")
 
+
+    def open_applog(self):
+                # Define the directory where the logs are stored
+        log_directory = self.settings.propath + "/logs"#"F:/UnityProjects/crealityscan_pc2/Logs"
+        
+        # Use glob to find all scan_log_*.txt files
+        log_files = glob.glob(os.path.join(log_directory, "app_*.log"))
+        
+        if log_files:
+            # Sort the files by modification time in descending order
+            latest_log_file = max(log_files, key=os.path.getmtime)
+            
+            # Open the latest log file
+            os.startfile(latest_log_file)
+        else:
+            messagebox.showinfo("Info", "No log files found.")
+
+    def open_crashlog(self):
+        edit_log_file = self.settings.editpath; #"C:/Users/xiwen/AppData/Local/Unity/Editor/Editor.log"
+        os.startfile(edit_log_file)
+        pass
+    def open_sdklog(self):
+        # Define the directory where the logs are stored
+        log_directory = self.settings.propath + "/logs"#"F:/UnityProjects/crealityscan_pc2/Logs"
+        
+        # Use glob to find all scan_log_*.txt files
+        log_files = glob.glob(os.path.join(log_directory, "scan_log_*.txt"))
+        
+        if log_files:
+            # Sort the files by modification time in descending order
+            latest_log_file = max(log_files, key=os.path.getmtime)
+            
+            # Open the latest log file
+            os.startfile(latest_log_file)
+        else:
+            messagebox.showinfo("Info", "No log files found.")
 
     def vibrate_window(self, magnitude, duration, steps):
         x, y = self.winfo_x(), self.winfo_y()
@@ -152,12 +213,19 @@ class RestReminderWin(tk.Tk):
 
     def work_button(self,seconds_left):
         if seconds_left > 0:
-            self.update_button.config(text=f"工作进行中 ({int(seconds_left/60)}分{seconds_left%60}秒)")
+            self.update_button.config(state="disabled")
+            self.update_button.config(text=f"Restaring... ({seconds_left%60}秒)")
             self.work_id = self.after(1000, lambda: self.work_button(seconds_left - 1))
         else:
-            self.set_reminder()
-            self.arrow()
-            self.enable_button_with_countdown(int(self.settings.restminutes) * 60)
+            self.update_button.config(text=f"Restart Unity")
+            self.update_button.config(state="normal")
+            # try:
+            #     t1 = Thread(target=self.restart_unity)
+            #     t1.start()
+            # except:
+            #     pass
+            # self.arrow()
+
 
     def play_sound(self):
         if self.settings.sound_on:
@@ -186,7 +254,7 @@ class RestReminderWin(tk.Tk):
         self.update_button.config(text="工作进行中")
         current_time = datetime.datetime.now()
         print("self.settings.workminutes",self.settings.workminutes) if DEBUG else None
-        time_after_random_seconds = current_time + datetime.timedelta(seconds=int(self.settings.workminutes)*60)
+        time_after_random_seconds = current_time + datetime.timedelta(seconds=0.1*60)
         formatted_current_time = current_time.strftime("%H:%M:%S")
         formatted_time = time_after_random_seconds.strftime("%H:%M:%S") #%Y-%m-%d %H:%M:%S
         self.timeUpdate.delete('1.0', tk.END)  # Clear the current content
@@ -200,16 +268,43 @@ class RestReminderWin(tk.Tk):
 
     def contiue_work(self):
         self.cancel_work()
-        self.check_Time()
-        self.work_button(int(self.settings.workminutes)*60)
-        self.set_work_msg()
+        # self.check_Time()
+        self.work_button(0.1*60)
+        # self.set_work_msg()
         self.isWork = True
         self.arrow()
 
     def start_work(self):
         self.reminderTimes = 0
         self.contiue_work()
-                    
+
+    def restart_unity(self):
+        import subprocess
+        # Kill the Unity process with the specified window title
+        project_name = os.path.basename(self.settings.propath)
+        subprocess.run(f'taskkill /F /IM Unity.exe /FI "WINDOWTITLE eq {project_name}*"', shell=True)
+        # Wait for 3 seconds
+        subprocess.run('timeout /t 3 /nobreak >nul', shell=True)
+        # Start Unity with the specified project path
+        # subprocess.run('"C:\\Program Files\\Unity\\Hub\\Editor\\2022.3.20f1\\Editor\\Unity.exe" -projectPath "F:\\UnityProjects\\crealityscan_pc2"', shell=True)
+        subprocess.run(f'"{self.settings.exepath}" -projectPath "{self.settings.propath}"', shell=True)
+     
+    def kill_unity(self):
+        import subprocess
+        # Kill the Unity process with the specified window title
+        subprocess.run('taskkill /F /IM Unity.exe', shell=True)
+
+
+    def Restart(self):
+        self.reminderTimes = 0
+        self.contiue_work()
+        try:
+            t1 = Thread(target=self.restart_unity)
+            t1.start()
+        except:
+            pass
+
+
         
 if __name__ == '__main__':
     # logger.add('worker.log') 

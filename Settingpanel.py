@@ -35,36 +35,47 @@ class SetDialog(tk.Toplevel):
         self.grid_columnconfigure(0, weight=1)
         self.grid_columnconfigure(1, weight=1)  # This will allow edit_alpha to resize
 
-        self.label_work = tk.Label(self, text="工作时间(分钟)",font=(self.parent.settings.text_font, int(self.parent.settings.text_size)))
+        self.label_work = tk.Label(self, text="Unity ExE Path",font=(self.parent.settings.text_font, int(self.parent.settings.text_size)))
         self.label_work.grid(row=0, column=0,  sticky='nsew',pady=(10, 0))
        
 
         self.edit_work = tk.Entry(self)
-        self.edit_work.insert(0, str(self.parent.settings.workminutes))
+        self.edit_work.insert(0, str(self.parent.settings.exepath))
         self.edit_work.grid(row=0, column=1,  sticky='nsew',pady=(10, 0))
         self.edit_work.config(font=(self.parent.settings.text_font, int(self.parent.settings.text_size)))
 
-        self.label_reset = tk.Label(self, text="休息时间(分钟)",font=(self.parent.settings.text_font, int(self.parent.settings.text_size)))
+        self.label_reset = tk.Label(self, text="Unity Project Path",font=(self.parent.settings.text_font, int(self.parent.settings.text_size)))
         self.label_reset.grid(row=1, column=0,  sticky='nsew',pady=(10, 0))
        
 
         self.edit_reset = tk.Entry(self)
-        self.edit_reset.insert(0, str(self.parent.settings.restminutes))
+        self.edit_reset.insert(0, str(self.parent.settings.propath))
         self.edit_reset.grid(row=1, column=1,  sticky='nsew',pady=(10, 0))
         self.edit_reset.config(font=(self.parent.settings.text_font, int(self.parent.settings.text_size)))
 
+
+        self.label_editor = tk.Label(self, text="Editor log Path",font=(self.parent.settings.text_font, int(self.parent.settings.text_size)))
+        self.label_editor.grid(row=2, column=0,  sticky='nsew',pady=(10, 0))
+       
+
+        self.editor_path = tk.Entry(self)
+        self.editor_path.insert(0, str(self.parent.settings.editpath))
+        self.editor_path.grid(row=2, column=1,  sticky='nsew',pady=(10, 0))
+        self.editor_path.config(font=(self.parent.settings.text_font, int(self.parent.settings.text_size)))
+
+
         # Set the window background color here
         self.label_alpha = tk.Label(self, text="透明度(0.0~1.0)",font=(self.parent.settings.text_font, int(self.parent.settings.text_size)))
-        self.label_alpha.grid(row=2, column=0,  sticky='nsew',pady=(10, 0))
+        self.label_alpha.grid(row=3, column=0,  sticky='nsew',pady=(10, 0))
        
 
         self.edit_alpha = tk.Entry(self)
         self.edit_alpha.insert(0, str(self.parent.settings.alpha))
-        self.edit_alpha.grid(row=2, column=1,  sticky='nsew',pady=(10, 0))
+        self.edit_alpha.grid(row=3, column=1,  sticky='nsew',pady=(10, 0))
         self.edit_alpha.config(font=(self.parent.settings.text_font, int(self.parent.settings.text_size)))
         
         self.label_color = tk.Label(self, text="背景颜色",font=(self.parent.settings.text_font, int(self.parent.settings.text_size)))
-        self.label_color.grid(row=3, column=0,  sticky='nsew',pady=(10, 0))
+        self.label_color.grid(row=4, column=0,  sticky='nsew',pady=(10, 0))
 
 
         # Create a StringVar to store the selected color
@@ -74,11 +85,11 @@ class SetDialog(tk.Toplevel):
         # Create the OptionMenu with black and white options
         color_names = ('white', 'black', 'red', 'green', 'blue', 'yellow', 'cyan', 'magenta', 'purple', 'orange', 'pink', 'gray')
         color_options = OptionMenu(self, self.edit_color,*color_names)
-        color_options.grid(row=3, column=1,  sticky='nsew',pady=(10, 0))
+        color_options.grid(row=4, column=1,  sticky='nsew',pady=(10, 0))
         color_options.config(font=(self.parent.settings.text_font, int(self.parent.settings.text_size)))
 
         self.label_size = tk.Label(self, text="字体大小",font=(self.parent.settings.text_font, int(self.parent.settings.text_size)))
-        self.label_size.grid(row=4, column=0,  sticky='nsew',pady=(10, 0))
+        self.label_size.grid(row=5, column=0,  sticky='nsew',pady=(10, 0))
         
 
         self.edit_size = tk.StringVar(self)
@@ -86,7 +97,7 @@ class SetDialog(tk.Toplevel):
 
         # Create the OptionMenu with black and white options
         size_options = OptionMenu(self, self.edit_size,*map(str,range(8,33)))
-        size_options.grid(row=4, column=1,  sticky='nsew',pady=(10, 0))
+        size_options.grid(row=5, column=1,  sticky='nsew',pady=(10, 0))
         size_options.config(font=(self.parent.settings.text_font, int(self.parent.settings.text_size)))
         # self.edit_size = tk.Entry(self)
         # self.edit_size.insert(0, str(self.parent.settings.text_size))
@@ -96,13 +107,13 @@ class SetDialog(tk.Toplevel):
         self.toggle_var = tk.BooleanVar()  # This variable will hold the on/off state
         self.toggle_var.set(self.parent.settings.sound_on)  # Set default to True (on) or False (off)
         self.bool_toggle = tk.Checkbutton(self, text="设置声音提醒",font=(self.parent.settings.text_font, int(self.parent.settings.text_size)), variable=self.toggle_var)
-        self.bool_toggle.grid(row=5, column=0, sticky='nsew', pady=(10, 0))
+        self.bool_toggle.grid(row=6, column=0, sticky='nsew', pady=(10, 0))
 
         ok_button = tk.Button(self, text="OK",font=(self.parent.settings.text_font, int(self.parent.settings.text_size)),command=self.update_settings)
-        ok_button.grid(row=6, column=0,  sticky='nsew',pady=(10, 0))
+        ok_button.grid(row=7, column=0,  sticky='nsew',pady=(10, 0))
     
         cancel_button = tk.Button(self, text="Cancel" ,font=(self.parent.settings.text_font, int(self.parent.settings.text_size)),command=self.cancel_settings)
-        cancel_button.grid(row=6, column=1,  sticky='nsew',pady=(10, 0))
+        cancel_button.grid(row=7, column=1,  sticky='nsew',pady=(10, 0))
 
     def update_settings(self):
         isUpdateAlpha = False
