@@ -1,0 +1,15 @@
+{
+ "bg_color": "green",
+ "alpha": "1",
+ "text_font": "Microsoft YaHei",
+ "text_size": 13,
+ "arrow_up": "0up.png",
+ "arrow_down": "0down.png",
+ "shortcut": "<Alt-q>",
+ "sound_file": "rest.wav",
+ "sound_on": false,
+ "watchlist": "config.xlsx",
+ "qrcode": "weixin.png",
+ "restminutes": 5,
+ "workminutes": 30
+}
