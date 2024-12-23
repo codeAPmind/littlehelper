@@ -89,6 +89,7 @@ class RestReminderWin(tk.Tk):
         self.grid_rowconfigure(2, weight=1)
         self.grid_rowconfigure(3, weight=1)
         self.grid_rowconfigure(4, weight=1)
+        self.grid_rowconfigure(5, weight=1)
         self.grid_columnconfigure(0, weight=1)
 
         context_menu = tk.Menu(self, tearoff=0)
@@ -124,6 +125,10 @@ class RestReminderWin(tk.Tk):
         self.open_crash_log = tk.Button(self, text="Editor log", command=self.open_crashlog)
         self.open_crash_log.grid(row=4, column=0,sticky='nsew',pady=(10, 0)) 
         self.open_crash_log.config(font=(self.settings.text_font, int(self.settings.text_size)))
+
+        self.test_path_log = tk.Button(self, text="TestPath log", command=self.generate_testpath)
+        self.test_path_log.grid(row=5, column=0,sticky='nsew',pady=(10, 0)) 
+        self.test_path_log.config(font=(self.settings.text_font, int(self.settings.text_size)))
         self.arrow()
         if isinstance(self.result,tuple) and not all(self.result):
             self.update_button.config(state="disabled")
@@ -143,6 +148,46 @@ class RestReminderWin(tk.Tk):
             
             # Open the latest log file
             os.startfile(latest_log_file)
+        else:
+            messagebox.showinfo("Info", "No log files found.")
+
+    def generate_testpath(self):
+        import re
+        # Define the directory where the logs are stored
+        log_directory = self.settings.propath + "/logs"
+
+        # Use glob to find all app_*.log files
+        log_files = glob.glob(os.path.join(log_directory, "app_*.log"))
+
+        if log_files:
+            # Sort the files by modification time in descending order
+            latest_log_file = max(log_files, key=os.path.getmtime)
+            print("latest log file",latest_log_file)
+            # Open the latest log file and extract relevant messages
+            with open(latest_log_file, 'r', encoding='utf-8') as file:
+                log_content = file.readlines()
+            
+            # Extract messages after "测试路径"
+            extracted_messages = []
+            for line in log_content:
+                if "Clicked" in line:
+                    print(line)
+                    if("Debug" not in line):
+                        continue
+                    # match = re.search(r"测试路径.*?(\w+ Clicked)", line)
+                    match = re.search(r"Clicked", line)
+                    if match:
+                        extracted_messages.append(line)
+                        # extracted_messages.append(line.split("测试路径:")[1])
+            
+            # Write extracted messages to a new file
+            testpath_log_file = os.path.join(log_directory, "testpath.log")
+            with open(testpath_log_file, 'w', encoding='utf-8') as file:
+                for message in extracted_messages:
+                    file.write(message + "\n")
+            
+            # Open the new log file
+            os.startfile(testpath_log_file)
         else:
             messagebox.showinfo("Info", "No log files found.")
 
