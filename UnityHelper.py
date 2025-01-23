@@ -139,77 +139,104 @@ class RestReminderWin(tk.Tk):
                 # Define the directory where the logs are stored
         log_directory = self.settings.propath + "/logs"#"F:/UnityProjects/crealityscan_pc2/Logs"
         
-        # Use glob to find all scan_log_*.txt files
-        log_files = glob.glob(os.path.join(log_directory, "app_*.log"))
+                # Find all directories in the log directory
+        log_folders = [d for d in os.listdir(log_directory) if os.path.isdir(os.path.join(log_directory, d))]
         
-        if log_files:
-            # Sort the files by modification time in descending order
-            latest_log_file = max(log_files, key=os.path.getmtime)
+        if log_folders:
+            # Sort the folders by name in descending order to get the latest
+            latest_folder = max(log_folders)
+            latest_folder_path = os.path.join(log_directory, latest_folder)
             
-            # Open the latest log file
-            os.startfile(latest_log_file)
-        else:
-            messagebox.showinfo("Info", "No log files found.")
+            # Use glob to find all app_*.log files in the latest folder
+            log_files = glob.glob(os.path.join(latest_folder_path, "app.log"))
+            
+            if log_files:
+
+                # Sort the files by modification time in descending order
+                latest_log_file = max(log_files, key=os.path.getmtime)
+                
+                # Open the latest log file
+                os.startfile(latest_log_file)
+            else:
+                messagebox.showinfo("Info", "No log files found.")
 
     def generate_testpath(self):
         import re
+
         # Define the directory where the logs are stored
-        log_directory = self.settings.propath + "/logs"
-
-        # Use glob to find all app_*.log files
-        log_files = glob.glob(os.path.join(log_directory, "app_*.log"))
-
-        if log_files:
-            # Sort the files by modification time in descending order
-            latest_log_file = max(log_files, key=os.path.getmtime)
-            print("latest log file",latest_log_file)
-            # Open the latest log file and extract relevant messages
-            with open(latest_log_file, 'r', encoding='utf-8') as file:
-                log_content = file.readlines()
-            
-            # Extract messages after "测试路径"
-            extracted_messages = []
-            for line in log_content:
-                if "Clicked" in line:
-                    print(line)
-                    if("Debug" not in line):
-                        continue
-                    # match = re.search(r"测试路径.*?(\w+ Clicked)", line)
-                    match = re.search(r"Clicked", line)
-                    if match:
-                        extracted_messages.append(line)
-                        # extracted_messages.append(line.split("测试路径:")[1])
-            
-            # Write extracted messages to a new file
-            testpath_log_file = os.path.join(log_directory, "testpath.log")
-            with open(testpath_log_file, 'w', encoding='utf-8') as file:
-                for message in extracted_messages:
-                    file.write(message + "\n")
-            
-            # Open the new log file
-            os.startfile(testpath_log_file)
+        log_directory = os.path.join(self.settings.propath, "logs")
+        
+        # Find all directories in the log directory
+        log_folders = [d for d in os.listdir(log_directory) if os.path.isdir(os.path.join(log_directory, d))]
+        
+        if log_folders:
+            # Sort the folders by name in descending order to get the latest
+            latest_folder = max(log_folders)
+            print(latest_folder)
+            latest_folder_path = os.path.join(log_directory, latest_folder)
+            print(latest_folder_path)
+            # Use glob to find all app_*.log files in the latest folder
+            log_files = glob.glob(os.path.join(latest_folder_path, "app*.log"))
+            print(log_files)
+            if log_files:
+                # Sort the files by modification time in descending order
+                latest_log_file = max(log_files, key=os.path.getmtime)
+                
+                # Open the latest log file and extract relevant messages
+                with open(latest_log_file, 'r', encoding='utf-8') as file:
+                    log_content = file.readlines()
+                
+                # Extract messages after "测试路径"
+                extracted_messages = []
+                for line in log_content:
+                    if "测试路径" in line:
+                        match = re.search(r"测试路径.*?(\w+ Clicked)", line)
+                        if match:
+                            extracted_messages.append(match.group(1))
+                
+                # Write extracted messages to a new file
+                testpath_log_file = os.path.join(latest_folder_path, "app_testpath.log")
+                with open(testpath_log_file, 'w', encoding='utf-8') as file:
+                    for message in extracted_messages:
+                        file.write(message + "\n")
+                
+                # Open the new log file
+                os.startfile(testpath_log_file)
+            else:
+                messagebox.showinfo("Info", "No log files found in the latest folder.")
         else:
-            messagebox.showinfo("Info", "No log files found.")
+            messagebox.showinfo("Info", "No log folders found.")
 
     def open_crashlog(self):
         edit_log_file = self.settings.editpath; #"C:/Users/xiwen/AppData/Local/Unity/Editor/Editor.log"
         os.startfile(edit_log_file)
         pass
+
     def open_sdklog(self):
         # Define the directory where the logs are stored
         log_directory = self.settings.propath + "/logs"#"F:/UnityProjects/crealityscan_pc2/Logs"
         
-        # Use glob to find all scan_log_*.txt files
-        log_files = glob.glob(os.path.join(log_directory, "scan_log_*.txt"))
+
+                # Find all directories in the log directory
+        log_folders = [d for d in os.listdir(log_directory) if os.path.isdir(os.path.join(log_directory, d))]
         
-        if log_files:
-            # Sort the files by modification time in descending order
-            latest_log_file = max(log_files, key=os.path.getmtime)
-            
-            # Open the latest log file
-            os.startfile(latest_log_file)
-        else:
-            messagebox.showinfo("Info", "No log files found.")
+        if log_folders:
+            # Sort the folders by name in descending order to get the latest
+            latest_folder = max(log_folders)
+            print(latest_folder)
+            latest_folder_path = os.path.join(log_directory, latest_folder)
+            print(latest_folder_path)
+            # Use glob to find all scan_log_*.txt files
+            log_files = glob.glob(os.path.join(latest_folder_path, "scan_log_*.txt"))
+            print(log_files)
+            if log_files:
+                # Sort the files by modification time in descending order
+                latest_log_file = max(log_files, key=os.path.getmtime)
+                
+                # Open the latest log file
+                os.startfile(latest_log_file)
+            else:
+                messagebox.showinfo("Info", "No log files found.")
 
     def vibrate_window(self, magnitude, duration, steps):
         x, y = self.winfo_x(), self.winfo_y()
