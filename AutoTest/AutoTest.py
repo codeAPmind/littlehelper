@@ -167,7 +167,7 @@ def Test(appPath):
     #########
     ### mesh 平滑，补洞
     ########
-    print("### mesh 平滑，补洞")
+    print("### meshing 平滑，补洞")
     #起步阶段做检查是否可以继续
     if exists(Template(r"tpl1744186106205.png",  record_pos=(-0.397, -0.207), resolution=(1552, 903))):
         touch(Template(r"tpl1744186106205.png", record_pos=(-0.397, -0.207), resolution=(1552, 903)))
@@ -180,7 +180,7 @@ def Test(appPath):
     # touch(Template(r"tpl1744186106205.png", record_pos=(-0.397, -0.207), resolution=(1552, 903)))
     time.sleep(4.0)
     touch(Template(r"tpl1744186107708.png", record_pos=(-0.33, 0.029), resolution=(1552, 903)))
-    time.sleep(25)
+    time.sleep(50)
     touch(Template(r"tpl1744186136504.png", record_pos=(-0.344, -0.206), resolution=(1552, 903)))
     time.sleep(4.0)
     touch(Template(r"tpl1744186137954.png", record_pos=(-0.343, -0.214), resolution=(1552, 903)))
