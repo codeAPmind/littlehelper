@@ -13,6 +13,11 @@ import time
 
 import math
 from pynput.keyboard import Key, Controller
+
+import subprocess
+
+# subprocess.run(['runas', '/user:Administrator', 'F:\\UnityProjects\\crealityscan_pc2\\Build\\Windows\\unpack\\CrealityScan 4.exe'])
+
 # 启动桌面应用，比如 Notepad
 app = Application().start("F:\\UnityProjects\\crealityscan_pc2\\Build\\Windows\\unpack\\CrealityScan 4.exe")
 
@@ -87,7 +92,7 @@ time.sleep(6.908)
 touch(Template(r"tpl1744185976646.png", record_pos=(-0.434, 0.23), resolution=(1552, 903)))
 time.sleep( 19.61)
 swipe(Template(r"tpl1744185989256.png", record_pos=(0.41, 0.241), resolution=(1552, 903)), vector=[0.009, 0.0133])
-time.sleep(1.2809999999999995)
+time.sleep( 0.5)
 touch(Template(r"tpl1744185991837.png", record_pos=(-0.427, 0.222), resolution=(1552, 903)))
 # time.sleep( 6.645)
 # swipe(Template(r"tpl1744185996482.png", record_pos=(-0.358, 0.238), resolution=(1552, 903)), vector=[0.0039, 0.0066])
@@ -115,7 +120,7 @@ time.sleep(4.278)
 touch(Template(r"tpl1744186012568.png", record_pos=(-0.436, 0.232), resolution=(1552, 903)))
 time.sleep(17.161)
 swipe(Template(r"tpl1744186027729.png", record_pos=(0.414, 0.232), resolution=(1552, 903)), vector=[0.0097, 0.0244])
-time.sleep( 1.229)
+time.sleep( 0.5)
 swipe(Template(r"tpl1744186029958.png", record_pos=(-0.431, 0.23), resolution=(1552, 903)), vector=[0.0013, 0.0044])
 time.sleep(5.66)
 touch(Template(r"tpl1744186033618.png", record_pos=(-0.362, 0.241), resolution=(1552, 903)))
@@ -126,7 +131,7 @@ touch(Template(r"tpl1744186044527.png", record_pos=(-0.405, -0.204), resolution=
 time.sleep(4.69)
 # ok 之后才是执行
 touch(Template(r"tpl1744186046570.png", record_pos=(0.028, 0.051), resolution=(1552, 903)))
-time.sleep(48.422)
+time.sleep(57.422)
 #########
 ### 拼接
 ########
@@ -136,7 +141,7 @@ time.sleep(5.32)
 touch(Template(r"tpl1744186095687.png", record_pos=(-0.457, -0.208), resolution=(1552, 903)))
 time.sleep(4.69)
 touch(Template(r"tpl1744186098123.png", record_pos=(-0.375, 0.249), resolution=(1552, 903)))
-time.sleep(30.796)
+time.sleep(39.796)
 touch(Template(r"tpl1744186101448.png", record_pos=(-0.43, 0.254), resolution=(1552, 903)))
 time.sleep(4.654)
 #########
@@ -190,9 +195,11 @@ touch(Template(r"tpl1744186183518.png", record_pos=(-0.475, -0.238), resolution=
 ########
 print("### 编辑操作")
 time.sleep( 3.731)
-touch(Template(r"tpl1744192901532.png", record_pos=(0.477, -0.08), resolution=(1552, 903)))
+touch(Template(r"tpl1744250679955.png", record_pos=(0.479, -0.036), resolution=(1552, 903)))
 time.sleep( 3.731)
-touch(Template(r"tpl1744192911708.png", record_pos=(0.443, -0.083), resolution=(1552, 903)))
+touch(Template(r"tpl1744252195233.png", record_pos=(0.479, 0.007), resolution=(1552, 903)))
+time.sleep(1)
+touch(Template(r"tpl1744250689001.png", record_pos=(0.445, -0.037), resolution=(1552, 903)))
 
 keyboard = Controller()
 
@@ -204,7 +211,7 @@ keyboard.press(Key.shift)
 # swipe((center_x, center_y), (end_x, end_y), duration=2)
 
 # Release the Shift key
-keyboard.release(Key.shift)
+# keyboard.release(Key.shift)
 # swipe(Template(r"tpl1744192925380.png", record_pos=(0.006, 0.098), resolution=(1552, 903)), vector=[-0.4034, -0.2625])
 # 获取屏幕中心坐标（假设你已经知道这些值，或者用截图方式获取）
 center_x, center_y = 960, 540  # 假设屏幕分辨率为 1920x1080
@@ -226,16 +233,16 @@ keyboard.release(Key.shift)
 # 按住 Shift 键（模拟按下 Shift 键）
 # keyevent("KEY_SHIFT", down=False)
 time.sleep( 3.731)
-if exists(Template(r"tpl1744193131475.png", record_pos=(0.479, 0.074), resolution=(1552, 903))):
-     touch(Template(r"tpl1744193131475.png", record_pos=(0.479, 0.074), resolution=(1552, 903)))
+if exists(Template(r"tpl1744250858971.png", record_pos=(0.479, 0.074), resolution=(1552, 903))):
+     touch(Template(r"tpl1744250858971.png", record_pos=(0.479, 0.074), resolution=(1552, 903)))
 else:
     print("newscan.png not found!")
     snapshot(filename="error_screenshot.png")
     # 你可以选择停止执行或继续执行
     raise 
 time.sleep( 3.731)
-if exists(Template(r"tpl1744193137524.png", record_pos=(0.479, 0.216), resolution=(1552, 903))):
-     touch(Template(r"tpl1744193137524.png", record_pos=(0.479, 0.216), resolution=(1552, 903)))
+if exists(Template(r"tpl1744250966794.png", record_pos=(0.479, 0.216), resolution=(1552, 903))):
+     touch(Template(r"tpl1744250966794.png", record_pos=(0.479, 0.216), resolution=(1552, 903)))
 else:
     print("newscan.png not found!")
     snapshot(filename="error_screenshot.png")
