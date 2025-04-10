@@ -58,12 +58,16 @@ app.window(title="CrealityScan 4").wait('ready')
 print("skip 掉 ")
 # [3.973, 7.754, 6.908, 14.61, 4.5809999999999995, 6.645, 4.681, 11.396, 3.731, 4.2780000000000005, 
 # 17.161, 4.229, 5.66, 10.573, 4.336, 4.043, 48.422, 4.695, 4.436, 5.325, 6.757, 3.503, 30.796, 3.45, 4.654, 4.099, 4.916, 5.965, 5.436, 5.518, 3.2969999999999997, 6.747, 6.017, 7.458, 10.296, 5.161]
-# touch(Template(r"tpl1744190450855.png", record_pos=(-0.256, 0.197), resolution=(1552, 903)))
-# time.sleep(3.973)
-# touch(Template(r"tpl1744190452473.png", record_pos=(-0.169, 0.17), resolution=(1552, 903)))
-# time.sleep(3.973)
-# touch(Template(r"tpl1744190454824.png", record_pos=(0.121, 0.229), resolution=(1552, 903)))
-# time.sleep(3.973)
+time.sleep(3.973)
+if exists(Template(r"tpl1744190450855.png", record_pos=(-0.256, 0.197), resolution=(1552, 903))):
+    touch(Template(r"tpl1744190450855.png", record_pos=(-0.256, 0.197), resolution=(1552, 903)))
+time.sleep(3.973)
+if exists(Template(r"tpl1744190452473.png", record_pos=(-0.169, 0.17), resolution=(1552, 903))):
+    touch(Template(r"tpl1744190452473.png", record_pos=(-0.169, 0.17), resolution=(1552, 903)))
+time.sleep(3.973)
+if exists(Template(r"tpl1744190454824.png", record_pos=(0.121, 0.229), resolution=(1552, 903))):
+    touch(Template(r"tpl1744190454824.png", record_pos=(0.121, 0.229), resolution=(1552, 903)))
+time.sleep(3.973)
 
 print("检查是否连接扫描仪器 ")
 # 使用 assert_exists 进行模板检查
@@ -195,7 +199,16 @@ touch(Template(r"tpl1744186183518.png", record_pos=(-0.475, -0.238), resolution=
 ########
 print("### 编辑操作")
 time.sleep( 3.731)
-touch(Template(r"tpl1744250679955.png", record_pos=(0.479, -0.036), resolution=(1552, 903)))
+### 进入编辑页面先检测是否顺利，否侧退出
+if exists(Template(r"tpl1744250679955.png", record_pos=(0.479, -0.036), resolution=(1552, 903))):
+     touch(Template(r"tpl1744250679955.png", record_pos=(0.479, -0.036), resolution=(1552, 903)))
+else:
+    print("edit.png not found!")
+    snapshot(filename="error_screenshot.png")
+    # 你可以选择停止执行或继续执行
+    raise 
+###
+# touch(Template(r"tpl1744250679955.png", record_pos=(0.479, -0.036), resolution=(1552, 903)))
 time.sleep( 3.731)
 touch(Template(r"tpl1744252195233.png", record_pos=(0.479, 0.007), resolution=(1552, 903)))
 time.sleep(1)
