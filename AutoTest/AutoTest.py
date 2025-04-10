@@ -26,13 +26,23 @@ def Test(appPath):
     # # Wait for 3 seconds
     time.sleep(20)
     # 1. 启动应用程序（注意处理路径空格）
-    app_path = r"F:\\UnityProjects\\crealityscan_pc2\\Build\Windows\\unpack\\CrealityScan 4.exe"
+    # app_path = r"F:\\UnityProjects\\crealityscan_pc2\\Build\Windows\\unpack\\CrealityScan 4.exe"
     auto_setup(__file__, devices=["Windows:///"])
+
+
+    from pywinauto import findwindows
+
+    windows = findwindows.find_elements(title_re='.*CrealityScan.*', backend='win32')
+    for win in windows:
+        print(f" Window class: {win.class_name}")
+        if win.class_name != "UnityWndClass":
+            print("close other",win.class_name)
+            win.close()
 
 
     # 3. 显式绑定窗口句柄
     # connect_device(f"Windows:///{handle}")
-    connect_device("Windows:///?title_re=.*CrealityScan.*")  # 自动完成窗口查找与绑定‌:ml-citation{ref="1,3" data="citationList"}
+    connect_device("Windows:///?title_re=.*CrealityScan 4.*")  # 自动完成窗口查找与绑定‌:ml-citation{ref="1,3" data="citationList"}
 
 
 
@@ -56,18 +66,20 @@ def Test(appPath):
     #########
     ### skip 掉
     ########
-    print("skip 掉 ")
+    print("连接不上提示 关闭 ")
     # [3.973, 7.754, 6.908, 14.61, 4.5809999999999995, 6.645, 4.681, 11.396, 3.731, 4.2780000000000005, 
     # 17.161, 4.229, 5.66, 10.573, 4.336, 4.043, 48.422, 4.695, 4.436, 5.325, 6.757, 3.503, 30.796, 3.45, 4.654, 4.099, 4.916, 5.965, 5.436, 5.518, 3.2969999999999997, 6.747, 6.017, 7.458, 10.296, 5.161]
     time.sleep(3.973)
     if exists(Template(r"tpl1744190450855.png", record_pos=(-0.256, 0.197), resolution=(1552, 903))):
         touch(Template(r"tpl1744190450855.png", record_pos=(-0.256, 0.197), resolution=(1552, 903)))
     time.sleep(3.973)
-    if exists(Template(r"tpl1744255489526.png", record_pos=(0.159, -0.092), resolution=(1552, 903))):
-        touch(Template(r"tpl1744255489526.png", record_pos=(0.159, -0.092), resolution=(1552, 903)))
-    time.sleep(3.973)
     if exists(Template(r"tpl1744190452473.png", record_pos=(-0.169, 0.17), resolution=(1552, 903))):
         touch(Template(r"tpl1744190452473.png", record_pos=(-0.169, 0.17), resolution=(1552, 903)))
+    print("性能检测 关闭 ")
+    time.sleep(3.973)
+    if exists(Template(r"tpl1744255489526.png", record_pos=(0.159, -0.092), resolution=(1552, 903))):
+        touch(Template(r"tpl1744255489526.png", record_pos=(0.159, -0.092), resolution=(1552, 903)))
+    print("新手指引 关闭 ")
     time.sleep(3.973)
     if exists(Template(r"tpl1744190454824.png", record_pos=(0.121, 0.229), resolution=(1552, 903))):
         touch(Template(r"tpl1744190454824.png", record_pos=(0.121, 0.229), resolution=(1552, 903)))
