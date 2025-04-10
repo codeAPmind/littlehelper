@@ -13,6 +13,8 @@ from name import datfile,name,path
 from keygen import query,permit,trial,key,sample,load,dump1,nt,dc,values
 import setting
 
+from AutoTest.AutoTest import Test
+
 import os
 import glob
 
@@ -126,9 +128,14 @@ class RestReminderWin(tk.Tk):
         self.open_crash_log.grid(row=4, column=0,sticky='nsew',pady=(10, 0)) 
         self.open_crash_log.config(font=(self.settings.text_font, int(self.settings.text_size)))
 
-        self.test_path_log = tk.Button(self, text="TestPath log", command=self.generate_testpath)
-        self.test_path_log.grid(row=5, column=0,sticky='nsew',pady=(10, 0)) 
-        self.test_path_log.config(font=(self.settings.text_font, int(self.settings.text_size)))
+        # self.test_path_log = tk.Button(self, text="TestPath log", command=self.generate_testpath)
+        # self.test_path_log.grid(row=5, column=0,sticky='nsew',pady=(10, 0)) 
+        # self.test_path_log.config(font=(self.settings.text_font, int(self.settings.text_size)))
+
+        self.test_auto = tk.Button(self, text="Auto Test", command=self.auto_test)
+        self.test_auto.grid(row=5, column=0,sticky='nsew',pady=(10, 0)) 
+        self.test_auto.config(font=(self.settings.text_font, int(self.settings.text_size)))
+
         self.arrow()
         if isinstance(self.result,tuple) and not all(self.result):
             self.update_button.config(state="disabled")
@@ -159,6 +166,9 @@ class RestReminderWin(tk.Tk):
                 os.startfile(latest_log_file)
             else:
                 messagebox.showinfo("Info", "No log files found.")
+
+    def auto_test(self):
+        Test(self.settings.propath + "/CrealityScan 4.exe")
 
     def generate_testpath(self):
         import re
