@@ -168,7 +168,7 @@ class RestReminderWin(tk.Tk):
                 messagebox.showinfo("Info", "No log files found.")
 
     def auto_test(self):
-        Test(self.settings.propath + "/CrealityScan 4.exe")
+        Test(self.settings.installPath + "/CrealityScan 4.exe")
 
     def generate_testpath(self):
         import re

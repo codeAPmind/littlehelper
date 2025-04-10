@@ -13,6 +13,7 @@
  "restminutes": 5,
  "workminutes": 30,
  "exepath": "C:/Program Files/Unity\\Hub\\Editor\\2022.3.20f1\\Editor\\Unity.exe",
- "propath": "F:\\UnityProjects\\crealityscan_pc2",
+ "propath": "F:/UnityProjects/crealityscan_pc2/Build/Windows/unpack",
+ "installpath": "F:/UnityProjects/crealityscan_pc2/Build/Windows/unpack",
  "editpath": "C:/Users/xiwen/AppData/Local/Unity/Editor/Editor.log"
 }
