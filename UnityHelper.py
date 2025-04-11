@@ -13,7 +13,7 @@ from name import datfile,name,path
 from keygen import query,permit,trial,key,sample,load,dump1,nt,dc,values
 import setting
 
-from AutoTest.AutoTest import Test
+from AutoTest import Test
 
 import os
 import glob
@@ -168,7 +168,7 @@ class RestReminderWin(tk.Tk):
                 messagebox.showinfo("Info", "No log files found.")
 
     def auto_test(self):
-        Test(self.settings.installPath + "/CrealityScan 4.exe")
+        Test(self.settings.installpath + "/CrealityScan 4.exe")
 
     def generate_testpath(self):
         import re
