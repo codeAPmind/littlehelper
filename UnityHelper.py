@@ -82,7 +82,7 @@ class RestReminderWin(tk.Tk):
         
         
     def initUI(self):
-        self.geometry("420x230")
+        self.geometry("420x300")
         self.attributes('-alpha', self.settings.alpha) 
         self.configure(bg=self.settings.bg_color)  
 
@@ -92,6 +92,8 @@ class RestReminderWin(tk.Tk):
         self.grid_rowconfigure(3, weight=1)
         self.grid_rowconfigure(4, weight=1)
         self.grid_rowconfigure(5, weight=1)
+        self.grid_rowconfigure(6, weight=1)
+        self.grid_rowconfigure(7, weight=1)
         self.grid_columnconfigure(0, weight=1)
 
         context_menu = tk.Menu(self, tearoff=0)
@@ -132,9 +134,17 @@ class RestReminderWin(tk.Tk):
         # self.test_path_log.grid(row=5, column=0,sticky='nsew',pady=(10, 0)) 
         # self.test_path_log.config(font=(self.settings.text_font, int(self.settings.text_size)))
 
-        self.test_auto = tk.Button(self, text="Auto Test", command=self.auto_test)
+        self.test_auto = tk.Button(self, text="Open Log Path", command=self.open_log_path)
         self.test_auto.grid(row=5, column=0,sticky='nsew',pady=(10, 0)) 
         self.test_auto.config(font=(self.settings.text_font, int(self.settings.text_size)))
+
+        self.del_library_button = tk.Button(self, text="Delete Library", command=self.delete_library)
+        self.del_library_button.grid(row=6, column=0,sticky='nsew',pady=(10, 0))
+        self.del_library_button.config(font=(self.settings.text_font, int(self.settings.text_size)))
+
+        self.kill_bee_button = tk.Button(self, text="Kill Bee Backend", command=self.kill_bee)
+        self.kill_bee_button.grid(row=7, column=0,sticky='nsew',pady=(10, 0))
+        self.kill_bee_button.config(font=(self.settings.text_font, int(self.settings.text_size)))
 
         self.arrow()
         if isinstance(self.result,tuple) and not all(self.result):
@@ -169,6 +179,15 @@ class RestReminderWin(tk.Tk):
 
     def auto_test(self):
         Test(self.settings.installpath + "/CrealityScan 4.exe")
+
+    def open_log_path(self):
+        log_directory = os.path.join(self.settings.propath, "logs")
+        if not os.path.isdir(log_directory):
+            messagebox.showinfo("Info", f"No log folder found:\n{log_directory}")
+            return
+        log_folders = [d for d in os.listdir(log_directory) if os.path.isdir(os.path.join(log_directory, d))]
+        target = os.path.join(log_directory, max(log_folders)) if log_folders else log_directory
+        os.startfile(target)
 
     def generate_testpath(self):
         import re
@@ -350,19 +369,97 @@ class RestReminderWin(tk.Tk):
 
     def restart_unity(self):
         import subprocess
-        # Kill the Unity process with the specified window title
-        project_name = os.path.basename(self.settings.propath)
+        exe = os.path.normpath(self.settings.exepath)
+        project = os.path.normpath(self.settings.propath)
+        if not os.path.isfile(exe):
+            self.after(0, lambda: messagebox.showerror("Restart Unity", f"找不到 Unity.exe：\n{exe}"))
+            return
+        if not os.path.isdir(project):
+            self.after(0, lambda: messagebox.showerror("Restart Unity", f"找不到工程目录：\n{project}"))
+            return
+        project_name = os.path.basename(project)
         subprocess.run(f'taskkill /F /IM Unity.exe /FI "WINDOWTITLE eq {project_name}*"', shell=True)
-        # Wait for 3 seconds
-        subprocess.run('timeout /t 3 /nobreak >nul', shell=True)
-        # Start Unity with the specified project path
-        # subprocess.run('"C:\\Program Files\\Unity\\Hub\\Editor\\2022.3.20f1\\Editor\\Unity.exe" -projectPath "F:\\UnityProjects\\crealityscan_pc2"', shell=True)
-        subprocess.run(f'"{self.settings.exepath}" -projectPath "{self.settings.propath}"', shell=True)
+        time.sleep(3)
+        # Detach so closing this helper does not kill Unity
+        flags = (subprocess.DETACHED_PROCESS | subprocess.CREATE_NEW_PROCESS_GROUP | 0x01000000)
+        subprocess.Popen([exe, "-projectPath", project], close_fds=True, creationflags=flags)
      
     def kill_unity(self):
         import subprocess
         # Kill the Unity process with the specified window title
         subprocess.run('taskkill /F /IM Unity.exe', shell=True)
+
+    def kill_bee(self):
+        import subprocess
+        # Bee backend often keeps Library/Bee locked after Editor/compile
+        bee_processes = (
+            'bee.exe',
+            'Bee.StandaloneDriver.exe',
+            'Unity.ILPP.Runner.exe',
+            'tundra.exe',
+        )
+        for name in bee_processes:
+            subprocess.run(f'taskkill /F /IM {name}', shell=True, stdout=subprocess.DEVNULL, stderr=subprocess.DEVNULL)
+
+    def delete_library(self):
+        project_path = getattr(self.settings, 'propath', '') or ''
+        library_path = os.path.join(project_path, 'Library')
+        if not project_path or not os.path.isdir(project_path):
+            messagebox.showwarning("Delete Library", "Unity 工程路径无效，请先在设置里填写 Unity Project Path。")
+            return
+        if not os.path.isdir(library_path):
+            messagebox.showinfo("Delete Library", f"未找到 Library 目录：\n{library_path}")
+            return
+        if not messagebox.askyesno("Delete Library", f"确定删除该工程的 Library？\n{library_path}"):
+            return
+        try:
+            self.del_library_button.config(state="disabled")
+            t1 = Thread(target=self._delete_library_work, args=(library_path,))
+            t1.start()
+        except:
+            self.del_library_button.config(state="normal")
+
+    def _delete_library_work(self, library_path):
+        import shutil
+        import stat
+        import subprocess
+
+        def _onerror(func, path, exc_info):
+            try:
+                os.chmod(path, stat.S_IWRITE)
+                func(path)
+            except Exception:
+                pass
+
+        self.kill_bee()
+        subprocess.run('timeout /t 1 /nobreak >nul', shell=True)
+        last_error = None
+        for _ in range(2):
+            try:
+                shutil.rmtree(library_path, onerror=_onerror)
+                if not os.path.exists(library_path):
+                    last_error = None
+                    break
+            except Exception as e:
+                last_error = e
+            self.kill_bee()
+            subprocess.run('timeout /t 1 /nobreak >nul', shell=True)
+            try:
+                shutil.rmtree(library_path, onerror=_onerror)
+                if not os.path.exists(library_path):
+                    last_error = None
+                    break
+            except Exception as e:
+                last_error = e
+
+        def _done():
+            self.del_library_button.config(state="normal")
+            if os.path.exists(library_path):
+                messagebox.showerror("Delete Library", f"删除失败，可能仍被占用：\n{library_path}\n{last_error or ''}")
+            else:
+                messagebox.showinfo("Delete Library", "Library 已删除。")
+
+        self.after(0, _done)
 
 
     def Restart(self):
